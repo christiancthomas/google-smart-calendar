@@ -31,12 +31,24 @@ def create():
     # },
     }
 
+    event = {
+        'summary': '',
+        'start': {},
+        'end': {}
+    }
+
     print('\nstarting create()...\n')
     try:
         creds = auth()
         service = build('calendar', 'v3', credentials=creds)
         event['summary'] = input('Event name: ')
-        print(event['summary'])
+        event['start']['dateTime'] = input('Event start time YYYY-MM-DDTHH:MM:SS-HH:MM: ')
+        event['end']['dateTime'] = input('Event end time YYYY-MM-DDTHH:MM:SS-HH:MM: ')
+        timezone = input('Event timezone (format like: America/Los Angeles): ')
+        event['start']['timeZone'] = timezone
+        event['end']['timeZone'] = timezone
+        event['location'] = input('Event location (optional): ')
+        event['description'] = input('Event description (optional): ')
 
         event = service.events().insert(calendarId='primary', body=event).execute()
         print('Event created: %s' % (event.get('htmlLink')))
